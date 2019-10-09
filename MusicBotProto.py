@@ -11,30 +11,33 @@ class Application(tk.Frame):
 
     # this creates all the widgets for our GUI
     def create_widgets(self):
+
+        #value for row on grid
+        r = 0
         
         #Title Label maybe convert to image
         self.header = tk.Label(self,
                              text="Music Bot",
                              font = "28",
                              height=2)
-        self.header.grid(row =0)
+        self.header.grid(row = r)
        
        #textEntry for user input
         self.textEntry = tk.Entry(self,
                                  width=20)
-        self.textEntry.grid(row=1, column=0)
+        self.textEntry.grid(row = r, column=0)
 
         #Search Button
         self.search = tk.Button(self,
                                 text="SEARCH",
                                 command = self.get_list)
-        self.search.grid(row = 1, column=1)
+        self.search.grid(row = r, column=1)
         
         #quit button
         self.quit = tk.Button(self, text= "Quit", 
                               fg="red", 
                               command = self.master.destroy)
-        self.quit.grid(row= 2)
+        self.quit.grid(row = r)
 
     # this is where we need to map user input to spotify database
     # we need to create a pkg for our AI to proccess input and return
