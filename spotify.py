@@ -100,6 +100,7 @@ class Song(spotify):
             self.artist = None
             self.popularity = None
             self.features = None
+            self.related_songs = []
 
     def get_related_songs(self):
         genres = self.get_genres(self.artist_id)
