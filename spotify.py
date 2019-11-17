@@ -31,7 +31,6 @@ class spotify():
         return result['tracks']['items'][0]
 
     # expects a song 
-    # returns a tuple with songs_id and artist_id in that order
     def get_songid(self, song):
         return song['id']
 
@@ -39,12 +38,21 @@ class spotify():
         return song['artists'][0]['id']
 
     #expects a list of genres
-    def search_genres(self, genres):
+    def get_genre_tracks(self, genres):
         result = {}
         for genre in genres:
+            result[genre] = []
+           
+           # normalizes string to allow for proper search
+            # then reverts it back to original state
             genre.replace(' ', '+')
-            tracklist = self.sp.search('genre:' + genre)
-            result[genre] = tracklist['tracks']['items']
+            tracklist = self.sp.search('genre:' + genre, 25)
+            genre.replace('+', ' ')
+
+            songs = tracklist['tracks']['items']
+            for elem in songs:
+                result[genre].append((elem['id'], elem['name'], elem['popularity']))
+
         return result 
    
    #expects song id, uri, urlid
@@ -57,7 +65,7 @@ class spotify():
         
 
     #expects artist id, uri, urlid
-    def get_artist_genres(self, input):
+    def get_genres(self, input):
         result = self.sp.artist(input)
         return result['genres']
 
@@ -72,20 +80,30 @@ class Song(spotify):
         super().__init__()
         self.set_attributes(input)
 
-    # attributes for sSong this allows us to create an instance of Song
+    # attributes for Song this allows us to create an instance of Song
     # with and without input to allow AI to search for songs if needded
     def set_attributes(self, input):
         if(input != ''):
             self.track = self.get_song(input)
             self.track_id = self.get_songid(self.track)
+            self.name = self.track['name']
             self.artist_id = self.get_artistid(self.track)
             self.artist = self.get_artist(self.artist_id)
             self.popularity = self.get_popularity(self.track)
             self.features = self.get_features(self.track_id)
+            self.related_songs = self.get_related_songs()
         else:
             self.track = None
             self.track_id = None
+            self.name = None
             self.artist_id = None
             self.artist = None
             self.popularity = None
             self.features = None
+
+    def get_related_songs(self):
+        genres = self.get_genres(self.artist_id)
+        songs =  self.get_genre_tracks(genres)
+        return songs
+
+
