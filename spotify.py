@@ -1,4 +1,4 @@
-import spotipy
+import spotipy 
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy.util as util
 
@@ -51,8 +51,7 @@ class spotify():
 
             songs = tracklist['tracks']['items']
             for elem in songs:
-                result[genre].append((elem['id'], elem['name'], elem['popularity']))
-
+                result[genre].append(( elem['name'], self.get_features(elem['id'])))
         return result 
    
    #expects song id, uri, urlid
